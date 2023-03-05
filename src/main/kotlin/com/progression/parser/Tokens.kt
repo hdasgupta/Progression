@@ -180,7 +180,23 @@ private class TokenNode private constructor(val token: Token, val children: List
 
             while (tokens.size > i) {
                 val token: Token = tokens[i]
+
                 nodes.add(TokenNode(token))
+
+                if(tokens.size > (i+1)) {
+                    if(tokens[i+1].type == TokenType.operators && tokens[i+1].subTypes == OperatorType.fact ) {
+                        val tn = TokenNode(tokens[i+1], listOf(nodes.last()))
+                        nodes.removeLast()
+                        nodes.add(tn)
+                        i++
+
+                        if(tokens.size <= (i+1)) {
+                            break
+                        }
+                    }
+                }
+
+
                 if (token.subTypes == BracketsType.opening) {
                     val closing: Int = getMatchingClosing(tokens, i)
                     val tokenNodes: List<TokenNode> = comma(tokens.subList(i+1, closing ))
@@ -196,6 +212,15 @@ private class TokenNode private constructor(val token: Token, val children: List
                         nodes.add(TokenNode(tokens[i-1], tokenNodes.toMutableList()))
                     }
                     i = closing
+
+                    if(tokens.size > (i+1)) {
+                        if(tokens[i+1].subTypes == OperatorType.fact) {
+                            val last = nodes.last()
+                            nodes.removeLast()
+                            nodes.add(TokenNode(tokens[i+1], listOf(last)))
+                            i++
+                        }
+                    }
                 }
 
                 i++
@@ -295,7 +320,7 @@ private class TokenNode private constructor(val token: Token, val children: List
             while (i<tokens.size) {
                 val token: Token = tokens[i].token
 
-               if(token.type==TokenType.operators && tokens[i].children.isEmpty()) {
+                if(token.type==TokenType.operators && tokens[i].children.isEmpty()) {
                    val subTypes = token.subTypes as OperatorType
                     if(stacks.operators.isEmpty()) {
                         stacks.operators.push(token)
@@ -460,7 +485,8 @@ enum class OperatorType(private val pattern: String, private val priority: Prior
     pow("\\^", Priority.veryHigh),
     mod("\\%", Priority.extremeHigh),
     pos("\\+", Priority.low),
-    neg("\\-", Priority.veryLow), ;
+    neg("\\-", Priority.veryLow),
+    fact("\\!", Priority.high), ;
 
     override fun pattern(): String = pattern
     override fun getName(): String = name

@@ -93,8 +93,6 @@ class ExpressionConstants {
                 one
             else if (isConst(operands[1], 1))
                 operands[0]
-            else if (isConst(operands[0], 0))
-                zero
             else if (isConst(operands[0], 1))
                 one
             else
@@ -114,47 +112,49 @@ class ExpressionConstants {
         fun inv(vararg operand: Operand): Operand =
             Operand.invert(if (operand[0] is Variable) (operand[0] as Variable).clone() else if (operand[0] is Constant) (operand[0] as Constant).clone() else operand[0])
 
-        fun sin(operand: Operand): Operation = op(Operators.sin, operand)
+        fun sin(vararg operand: Operand): Operation = op(Operators.sin, operand[0])
 
-        fun cos(operand: Operand): Operation = op(Operators.cos, operand)
+        fun cos(vararg operand: Operand): Operation = op(Operators.cos, operand[0])
 
-        fun tan(operand: Operand): Operation = op(Operators.tan, operand)
+        fun tan(vararg operand: Operand): Operation = op(Operators.tan, operand[0])
 
-        fun cot(operand: Operand): Operation = op(Operators.cot, operand)
+        fun cot(vararg operand: Operand): Operation = op(Operators.cot, operand[0])
 
-        fun sec(operand: Operand): Operation = op(Operators.sec, operand)
+        fun sec(vararg operand: Operand): Operation = op(Operators.sec, operand[0])
 
-        fun cosec(operand: Operand): Operation = op(Operators.cosec, operand)
+        fun cosec(vararg operand: Operand): Operation = op(Operators.cosec, operand[0])
 
-        fun r2d(operand: Operand): Operation = op(Operators.rad2deg, operand)
+        fun r2d(vararg operand: Operand): Operation = op(Operators.rad2deg, operand[0])
 
-        fun d2r(operand: Operand): Operation = op(Operators.deg2rad, operand)
+        fun d2r(vararg operand: Operand): Operation = op(Operators.deg2rad, operand[0])
 
         fun undef(): Undefined = Undefined()
 
-        fun asin(operand: Operand): Operation = op(Operators.asin, operand)
+        fun asin(vararg operand: Operand): Operation = op(Operators.asin, operand[0])
 
-        fun acos(operand: Operand): Operation = op(Operators.acos, operand)
+        fun acos(vararg operand: Operand): Operation = op(Operators.acos, operand[0])
 
-        fun atan(operand: Operand): Operation = op(Operators.atan, operand)
+        fun atan(vararg operand: Operand): Operation = op(Operators.atan, operand[0])
 
-        fun acot(operand: Operand): Operation = op(Operators.acot, operand)
+        fun acot(vararg operand: Operand): Operation = op(Operators.acot, operand[0])
 
-        fun asec(operand: Operand): Operation = op(Operators.asec, operand)
+        fun asec(vararg operand: Operand): Operation = op(Operators.asec, operand[0])
 
-        fun acosec(operand: Operand): Operation = op(Operators.acosec, operand)
+        fun acosec(vararg operand: Operand): Operation = op(Operators.acosec, operand[0])
 
-        fun sinh(operand: Operand): Operation = op(Operators.sinh, operand)
+        fun sinh(vararg operand: Operand): Operation = op(Operators.sinh, operand[0])
 
-        fun cosh(operand: Operand): Operation = op(Operators.cosh, operand)
+        fun cosh(vararg operand: Operand): Operation = op(Operators.cosh, operand[0])
 
-        fun tanh(operand: Operand): Operation = op(Operators.tanh, operand)
+        fun tanh(vararg operand: Operand): Operation = op(Operators.tanh, operand[0])
 
-        fun coth(operand: Operand): Operation = op(Operators.coth, operand)
+        fun coth(vararg operand: Operand): Operation = op(Operators.coth, operand[0])
 
-        fun sech(operand: Operand): Operation = op(Operators.sech, operand)
+        fun sech(vararg operand: Operand): Operation = op(Operators.sech, operand[0])
 
-        fun cosech(operand: Operand): Operation = op(Operators.cosech, operand)
+        fun cosech(vararg operand: Operand): Operation = op(Operators.cosech, operand[0])
+
+        fun fact(vararg operand: Operand): Operation = op(Operators.fact, operand[0])
 
         fun func(vararg variables: Variable): Function = Function("fx", variables.toSet())
 
@@ -209,7 +209,7 @@ class ExpressionConstants {
                         .toTypedArray()
                 )
                 is Literal<*> -> const(root)
-                else -> root
+                else -> if(compare(root, source)) target else root
             }
 
         fun isConst(operand: Operand): Boolean =

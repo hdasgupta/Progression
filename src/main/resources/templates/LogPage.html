@@ -16,48 +16,22 @@
     <title>Differentiation Page</title>
 </head>
 <body>
-    <form method="post" action="/progression">
+    <form method="post" action="/log">
         <div class="input-group input-group-lg has-error has-feedback nm">
             <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td>
-                        </td>
-                        <td>
-                            <input type="number" id="end" name="end"
-                                   th:value="${end}" width="3" min="-1"
-                                   class="form-control" style="width:30px;font-size:8px;padding:0px"
-                                   onchange="onChange(event, $('#auto').val()=='on')">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="vertical-align: middle;padding: 0;margin: 0;">
-                            <img th:src="@{/img/sigma.png}" height="70px" width="70px">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            n =
-                        </td>
-                        <td>
-                            <input type="number" id="start" name="start"
-                                   th:value="${start}" width="3"
-                                   class="form-control" style="width:30px;font-size:8px;padding:0px"
-                                   onchange="onChange(event, $('#auto').val()=='on')" >
-                        </td>
-                    </tr>
-                </table>
+                log
             </span>
             </div>
-            <textarea type="text" tabindex="1"
-                      class="form-control basicAutoComplete cfc" th:id="formula" th:name="formula"
-                      placeholder="Enter Formula to Differentiate"
-                      aria-label="Large"
-                      onkeyup="onChange(event, $('#auto').val()=='on')" autocomplete="on"
-            >[[${formula}]]</textarea>
+            <input type="number" tabindex="1" name="x" id="x" th:value="${x}"
+                      class="form-control basicAutoComplete cfc"
+                      placeholder="Enter Formula to calculate"
+                   min="-0.999" max="0.999" step="0.000001"
+                      onchange="$('#formula').val('((-1^(n-1))*(('+$('#x').val()+'-1)^n))/n');onChange(event, $('#auto').val()=='on')" autocomplete="on"
+            >
+            <input type="hidden" name="formula" id="formula" th:value="${'((-1^(n-1))*(('+x+'-1)^n))/n'}">
             <div class="input-group-append">
-                <button disabled class="btn btn-primary" type="submit" id="generate" onclick="generate('#table')">Generate</button>
+                <button class="btn btn-primary" type="submit" id="generate" onclick="generate('#table')">Generate</button>
             </div>
             <div class="input-group-append">
                 <button class="btn btn-primary" type="button" onclick="generate('#table')" data-toggle="modal" data-target="#help">Help</button>
@@ -79,7 +53,7 @@
             <table border="0">
                 <tr>
                     <td>
-                        <center>[[${end==-1?'&infin;':end}]]</center>
+                        <center>&infin;</center>
                     </td>
                     <td rowspan="3">
                         <h4 id="table">
@@ -98,11 +72,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <center>n = [[${start}]]</center>
+                        <center>n = 0</center>
                     </td>
                 </tr>
             </table>
-
             <br />
             <table border="1" cellpadding="10">
                     <tr>

@@ -1,7 +1,7 @@
 
 <table border="0" cellpadding="0" th:fragment="unary (operator, operands, root)">
     <tr>
-        <td style="vertical-align: middle;padding: 0;margin: 0;">
+        <td style="vertical-align: middle;padding: 0;margin: 0;" th:if="${operator != T(com.progression.parser.expression.Operators).fact}">
             <b style="color: purple">
                 <i>
                     [[${operator.symbol}]]
@@ -14,6 +14,13 @@
         </td>
         <td style="vertical-align: middle;padding: 0;margin: 0;">
             <div th:replace="operands/MainRouter.html :: route(operand=${operands[0]}, root=${false})"></div>
+        </td>
+        <td style="vertical-align: middle;padding: 0;margin: 0;" th:if="${operator == T(com.progression.parser.expression.Operators).fact}">
+            <b style="color: purple">
+                <i>
+                    [[${operator.symbol}]]
+                </i>
+            </b>
         </td>
         <td style="vertical-align: middle;padding: 0;margin: 0;"
             th:class="${(!(operands[0] instanceof T(com.progression.parser.expression.Operation)) || (operands[0] instanceof T(com.progression.parser.expression.Operation) && (operands[0].operands.length == 1)||operands[0].operator==T(com.progression.parser.expression.Operators).pow)) ? 'right' :''}">

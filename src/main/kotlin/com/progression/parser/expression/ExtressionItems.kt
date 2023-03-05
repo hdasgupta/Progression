@@ -7,6 +7,9 @@ import com.progression.parser.expression.ExpressionConstants.Companion.name
 import com.progression.parser.expression.ExpressionConstants.Companion.one
 import org.jetbrains.annotations.NotNull
 import java.util.*
+import java.util.stream.IntStream
+
+fun Double.format(scale: Int) = "%.${scale}f".format(this)
 
 class NoOperandOperatorException : Exception("Operator with no argument is not allowed")
 
@@ -243,6 +246,18 @@ enum class Operators(
             num.toString()
         }
     }, 1),
+    fact("! ", { numbers, isReal ->
+        run {
+            if(numbers[0].toInt() == 0) {
+                1.toString()
+            } else {
+                val num = IntStream.range(1, (numbers[0].toInt()+1))
+                    .reduce { left, right -> left * right }
+                    .asInt
+                num.toString()
+            }
+        }
+    }, 1),
 }
 
 abstract class Operand(val leaf: Boolean = true) : Comparable<Operand> {
@@ -366,7 +381,11 @@ class Operation(@NotNull operator: Operators, @NotNull vararg operands: Operand)
 
     override fun string(): String {
         return when (operands.size) {
-            1 -> "${operator.symbol}${if (operands[0] is Operation && (operands[0] as Operation).operands.size>1) "${operands[0].string()}" else "(${operands[0].string()})"}"
+            1 ->
+                if(operator==Operators.fact)
+                    "${operands[0].string()}!"
+                else
+                    "${operator.symbol}${if (operands[0] is Operation && (operands[0] as Operation).operands.size>1) "${operands[0].string()}" else "(${operands[0].string()})"}"
             else -> "(${operands.joinToString(separator = operator.symbol) { o -> o.string() }})"
         }
     }
@@ -470,7 +489,7 @@ class Constant(name: String) : UnitOperand(name, false) {
     }
 
     override fun calc(approx: Boolean): Number {
-        return lit?.calc(approx) ?: throw Exception("No constant value")
+        return lit?.calc(approx) ?: if(name=="pi") Math.PI else throw Exception("No constant value")
     }
 
     override fun deepEquals(operand: Operand): Boolean {
