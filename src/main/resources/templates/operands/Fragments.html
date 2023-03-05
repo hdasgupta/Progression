@@ -1,0 +1,137 @@
+
+<table border="0" cellpadding="0" th:fragment="unary (operator, operands, root)">
+    <tr>
+        <td style="vertical-align: middle;padding: 0;margin: 0;">
+            <b style="color: purple">
+                <i>
+                    [[${operator.symbol}]]
+                </i>
+            </b>
+        </td>
+        <td style="vertical-align: middle;padding: 0;margin: 0;"
+            th:class="${(!(operands[0] instanceof T(com.progression.parser.expression.Operation)) || (operands[0] instanceof T(com.progression.parser.expression.Operation) && (operands[0].operands.length == 1)||operands[0].operator==T(com.progression.parser.expression.Operators).pow)) ? 'left' :''}">
+            (
+        </td>
+        <td style="vertical-align: middle;padding: 0;margin: 0;">
+            <div th:replace="operands/MainRouter.html :: route(operand=${operands[0]}, root=${false})"></div>
+        </td>
+        <td style="vertical-align: middle;padding: 0;margin: 0;"
+            th:class="${(!(operands[0] instanceof T(com.progression.parser.expression.Operation)) || (operands[0] instanceof T(com.progression.parser.expression.Operation) && (operands[0].operands.length == 1)||operands[0].operator==T(com.progression.parser.expression.Operators).pow)) ? 'right' :''}">
+            )
+        </td>
+    </tr>
+</table>
+
+
+<table border="0" cellpadding="0" th:fragment="divide (operator, operands, root)">
+    <tr>
+        <td style="vertical-align: middle;padding: 0;margin: 0;">
+            <center>
+                <div th:replace="operands/MainRouter.html :: route(operand=${operands[0]}, root=${false})"></div>
+            </center>
+        </td>
+    </tr>
+    <tr>
+        <td style="vertical-align: middle;padding: 0;margin: 0;">
+            <hr style="height: 2px; padding: 0;margin: 0; color: black;"/>
+        </td>
+    </tr>
+    <tr>
+        <td style="vertical-align: middle;padding: 0;margin: 0;">
+            <center>
+                <div th:replace="operands/MainRouter.html :: route(operand=${operands[1]}, root=${false})"></div>
+            </center>
+        </td>
+    </tr>
+</table>
+
+
+<table border="0" cellpadding="0" th:fragment="power (operator, operands, root)">
+    <tr>
+        <td th:if="${operands[0] instanceof T(com.progression.parser.expression.Operation)}" style="vertical-align: middle;padding: 0;margin: 0;"  class="left" >
+            (
+        </td>
+        <td style="vertical-align: middle;padding: 0;margin: 0;">
+            <div th:replace="operands/MainRouter.html :: route(operand=${operands[0]}, root=${false})"></div>
+        </td>
+        <td th:if="${operands[0] instanceof T(com.progression.parser.expression.Operation)}" style="vertical-align: middle;padding: 0;margin: 0;" class="right" >
+            )
+        </td>
+        <td style="vertical-align: middle;padding: 0;margin: 0;">
+            <sup>
+                <div th:replace="operands/MainRouter.html :: route(operand=${operands[1]}, root=${false})"></div>
+            </sup>
+        </td>
+    </tr>
+</table>
+
+
+<table border="0" cellpadding="0" th:fragment="binary (operator, operands, root)">
+    <tr>
+        <td th:if="${!root}" style="vertical-align: middle;padding: 0;margin: 0;"
+            class="left">
+            (
+        </td>
+        <div th:each="o, stat: ${operands}" th:remove="tag">
+            <td th:if="${stat.index>0}" style="vertical-align: middle;padding: 0;margin: 0;">
+                <b style="color:indigo">
+                    [[${operator== T(com.progression.parser.expression.Operators).mul ? "&times;" : operator.symbol}]]
+                </b>
+            </td>
+            <td style="vertical-align: middle;padding: 0;margin: 0;">
+                <div th:replace="operands/MainRouter.html :: route(operand=${o}, root=${false})"></div>
+            </td>
+        </div>
+        <td th:if="${!root}" style="vertical-align: middle;padding: 0;margin: 0;"
+            class="right">
+            )
+        </td>
+    </tr>
+</table>
+
+
+<b style="color:maroon" th:fragment="constant (lit, name, root)">
+    [[${lit!=null ? lit : name}]]
+</b>
+
+
+<b th:fragment="variable (name, index, root)">
+    <i style="color:green" th:if="${name!=null}">
+        [[${name}]]
+        <sub th:if="${index!=null}">
+            [[${index}]]
+        </sub>
+    </i>
+</b>
+
+
+<div th:fragment="function (name, index, root)" th:remove="tag">
+    <table>
+        <tr>
+            <td>
+                <b>
+                    <i style="color:green">
+                        $nam
+                        <sub>
+                            $idx
+                        </sub>
+                    </i>
+                </b>
+            </td>
+            <td class="left">
+                (
+            </td>
+            <td>
+                x
+            </td>
+            <td class="right">
+                )
+            </td>
+        </tr>
+    </table>
+    </b>
+</div>
+
+<b style="color:maroon"  th:fragment="numeric (obj, root)">
+    [[${obj}]]
+</b>

@@ -1,0 +1,86 @@
+<span th:fragment="route(operand, root)" >
+    <div th:if="${operand instanceof T(com.progression.parser.expression.Operation) && operand.operands.length==1}"
+         th:remove="tag">
+        <div
+                th:replace="operands/Fragments :: unary(operator=${operand.operator}, operands=${operand.operands}, root=${root})"
+                th:remove="tag">
+        </div>
+
+    </div>
+
+    <div th:if="${operand instanceof T(com.progression.parser.expression.Operation) && operand.operator.name()=='div'}"
+         th:remove="tag">
+        <div
+                th:replace="operands/Fragments :: divide(operator=${operand.operator}, operands=${operand.operands}, root=${root})"
+                 th:remove="tag">
+
+        </div>
+
+    </div>
+
+
+    <div th:if="${operand instanceof T(com.progression.parser.expression.Operation) && operand.operator.name()=='pow'}"
+         th:remove="tag">
+        <div
+                th:replace="operands/Fragments :: power(operator=${operand.operator}, operands=${operand.operands}, root=${root})"
+                 th:remove="tag">
+
+        </div>
+
+    </div>
+
+
+    <div th:if="${operand instanceof T(com.progression.parser.expression.Operation) && operand.operator.name()!='pow' && operand.operator.name()!='div' && operand.operands.length>1}"
+         th:remove="tag">
+        <div
+                th:replace="operands/Fragments :: binary(operator=${operand.operator}, operands=${operand.operands}, root=${root})"
+                 th:remove="tag">
+
+        </div>
+
+    </div>
+
+
+    <div th:if="${operand instanceof T(com.progression.parser.expression.Constant)}"
+         th:remove="tag">
+        <div
+                th:replace="operands/Fragments :: constant(lit=${operand.lit}, name=${operand.name}, root=${root})"
+                 th:remove="tag">
+
+        </div>
+
+    </div>
+
+
+    <div th:if="${operand instanceof T(com.progression.parser.expression.Variable)}"
+         th:remove="tag">
+        <div
+                th:replace="operands/Fragments :: variable(name=${operand.name}, index=${operand.index}, root=${root})"
+                 th:remove="tag">
+
+        </div>
+
+    </div>
+
+
+    <div th:if="${operand instanceof T(com.progression.parser.expression.Function)}"
+         th:remove="tag">
+        <div
+                th:replace="operands/Fragments :: function(name=${operand.nam}, index=${operand.idx}, root=${root})"
+                 th:remove="tag">
+
+        </div>
+
+    </div>
+
+
+    <div th:if="${operand instanceof T(com.progression.parser.expression.IntegerLiteral) || operand instanceof T(com.progression.parser.expression.DecimalLiteral) }"
+         th:remove="tag">
+        <div
+                th:replace="operands/Fragments :: numeric(obj=${operand.obj}, root=${root})"
+                 th:remove="tag">
+
+        </div>
+
+    </div>
+</span>
